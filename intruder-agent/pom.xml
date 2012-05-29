@@ -4,7 +4,8 @@
 	<parent>
 		<groupId>com.alibaba</groupId>
 		<artifactId>intruder</artifactId>
-		<version>0.1</version>
+		<relativePath>../pom.xml</relativePath>
+		<version>${project.version}</version>
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>

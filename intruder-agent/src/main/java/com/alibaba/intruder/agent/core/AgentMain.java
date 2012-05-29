@@ -6,6 +6,7 @@ import java.lang.instrument.UnmodifiableClassException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.security.SecureClassLoader;
 import java.util.Arrays;
 
 import com.alibaba.intruder.agent.core.Parameters.Type;
@@ -33,9 +34,9 @@ public class AgentMain {
 		System.out.println("agentmain start...");
 
 		parameters = ParameterReader.readParameters(filePath);
-		
+
 		initLog();
-		
+
 		loadAgentForClass(inst);
 
 		Logger.info("Agent done!");
@@ -58,8 +59,17 @@ public class AgentMain {
 
 	private static void handle(Instrumentation inst, Class<?> c)
 			throws Exception {
+		
+		URLClassLoader ucl = (URLClassLoader) c.getClassLoader();
+		addURLToClassLoader(ucl);
+
 		if (parameters.getType().equals(Type.loadNewClass)) {
-			loadNewClass(c);
+
+			Logger.info("URLClassLoader " + ucl + " loaded "
+					+ parameters.getNewClassFullName());
+			Class<?> clazz = ucl.loadClass(parameters.getNewClassFullName());
+			Method method = clazz.getMethod("execute");
+			method.invoke(clazz.newInstance());
 
 		} else if (parameters.getType().equals(Type.transformClass)) {
 
@@ -72,38 +82,44 @@ public class AgentMain {
 	}
 
 	/**
-	 * c's ClassLoader must be URLClassLoader, or terminate
+	 * c's ClassLoader must be URLClassLoader, or terminate\
 	 * 
 	 * @param c
+	 * @return
 	 * @throws Exception
 	 */
-	private static void loadNewClass(Class<?> c) throws Exception {
-
-		URLClassLoader ucl = getClassLoader(c);
-		Logger.info("URLClassLoader " + ucl + " loaded "
-				+ parameters.getNewClassFullName());
-		Class<?> clazz = ucl.loadClass(parameters.getNewClassFullName());
-		Method method = clazz.getMethod("execute");
-		method.invoke(clazz.newInstance());
-	}
-
-	private static URLClassLoader getClassLoader(Class<?> c) throws Exception {
+	private static URLClassLoader addURLToClassLoader(URLClassLoader ucl)
+			throws Exception {
 		// URLClassLoader ucl = new URLClassLoader(parameters.getNewClassPath(),
-		// c.getClassLoader());
-
-		URLClassLoader ucl = (URLClassLoader) c.getClassLoader();
+		// ucl); DO NOT DELETE
 
 		Logger.debug("before add:" + Arrays.asList(ucl.getURLs()).toString());
 
-		Method addURLMethod = ucl.getClass().getMethod("addURL", URL.class);
-		for (URL url : parameters.getNewClassPath()) {
-			addURLMethod.invoke(ucl, url);
+		for (Class<?> clazz = ucl.getClass(); clazz != null
+				&& clazz != SecureClassLoader.class; clazz = clazz
+				.getSuperclass()) {
+
+			try {
+				Method addURLMethod = clazz.getDeclaredMethod("addURL",
+						URL.class);
+				addURLMethod.setAccessible(true);
+
+				for (URL url : parameters.getNewClassPath()) {
+					addURLMethod.invoke(ucl, url);
+				}
+
+				Logger.debug("after add:"
+						+ Arrays.asList(ucl.getURLs()).toString());
+
+				return ucl;
+			} catch (Exception e) {
+				// ignore
+				// e.printStackTrace();
+			}
+
 		}
 
-		Logger.debug("after add:" + Arrays.asList(ucl.getURLs()).toString());
-
-		return ucl;
-
+		throw new Exception("method addURL() is not found");
 	}
 
 	private static boolean isTargetClass(Class<?> c) {

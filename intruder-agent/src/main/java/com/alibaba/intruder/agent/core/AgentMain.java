@@ -3,6 +3,7 @@ package com.alibaba.intruder.agent.core;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
 import java.lang.instrument.UnmodifiableClassException;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -11,7 +12,6 @@ import java.util.Arrays;
 
 import com.alibaba.intruder.agent.core.Parameters.Type;
 import com.alibaba.intruder.agent.util.Logger;
-import com.alibaba.intruder.agent.util.Logger.LEVEL;
 import com.alibaba.intruder.agent.util.ParameterReader;
 
 /**
@@ -35,7 +35,7 @@ public class AgentMain {
 
 		parameters = ParameterReader.readParameters(filePath);
 
-		initLog();
+		Logger.initLog(parameters.getLoglevel());
 
 		loadAgentForClass(inst);
 
@@ -64,21 +64,30 @@ public class AgentMain {
 		addURLToClassLoader(ucl);
 
 		if (parameters.getType().equals(Type.loadNewClass)) {
-
-			Logger.info("URLClassLoader " + ucl + " loaded "
-					+ parameters.getNewClassFullName());
-			Class<?> clazz = ucl.loadClass(parameters.getNewClassFullName());
-			Method method = clazz.getMethod("execute");
-			method.invoke(clazz.newInstance());
-
+			runNewClass(ucl);
 		} else if (parameters.getType().equals(Type.transformClass)) {
-
-			ClassFileTransformer transformer = new Transformer();
-			inst.addTransformer(transformer, true);
-			inst.retransformClasses(c);
-			inst.removeTransformer(transformer);
+			transformClass(inst, c);
 		}
 
+	}
+
+	private static void transformClass(Instrumentation inst, Class<?> c)
+			throws UnmodifiableClassException {
+		ClassFileTransformer transformer = new Transformer();
+		inst.addTransformer(transformer, true);
+		inst.retransformClasses(c);
+		inst.removeTransformer(transformer);
+	}
+
+	private static void runNewClass(URLClassLoader ucl)
+			throws ClassNotFoundException, NoSuchMethodException,
+			IllegalAccessException, InvocationTargetException,
+			InstantiationException {
+		Logger.info("URLClassLoader " + ucl + " loaded "
+				+ parameters.getNewClassFullName());
+		Class<?> clazz = ucl.loadClass(parameters.getNewClassFullName());
+		Method method = clazz.getMethod("execute");
+		method.invoke(clazz.newInstance());
 	}
 
 	/**
@@ -125,21 +134,6 @@ public class AgentMain {
 	private static boolean isTargetClass(Class<?> c) {
 		return c.getName().equalsIgnoreCase(parameters.getTargetClassName());
 	}
-
-	private static void initLog() {
-		String levelConf = parameters.getLoglevel();
-
-		if (null == levelConf) {
-			Logger.setLevel(LEVEL.info);
-			return;
-		}
-
-		try {
-			Logger.setLevel(LEVEL.valueOf(levelConf));
-		} catch (Exception e) {
-			System.out.println(levelConf
-					+ " is not a valid format, log level is set to info ");
-			Logger.setLevel(LEVEL.info);
-		}
-	}
+	
+	
 }

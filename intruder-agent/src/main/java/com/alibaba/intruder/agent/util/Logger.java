@@ -46,18 +46,17 @@ public class Logger {
 		}
 	}
 
-	private static void initLog(Parameters parameters) {
-		String levelConf = parameters.getLoglevel();
+	public static void initLog(String logLevelConf) {
 
-		if (null == levelConf) {
+		if (null == logLevelConf) {
 			Logger.setLevel(LEVEL.info);
 			return;
 		}
 
 		try {
-			Logger.setLevel(LEVEL.valueOf(levelConf));
+			Logger.setLevel(LEVEL.valueOf(logLevelConf));
 		} catch (Exception e) {
-			System.out.println(levelConf
+			System.out.println(logLevelConf
 					+ " is not a valid format, log level is set to info ");
 			Logger.setLevel(LEVEL.info);
 		}

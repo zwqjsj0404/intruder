@@ -89,7 +89,7 @@
 									<directory>src/main/resources/</directory>
 									<includes>
 										<include>conf/agent.properties</include>
-										<include>bin/intruder.sh</include>
+										<include>bin/**</include>
 									</includes>
 									<filtering>true</filtering>
 								</resource>

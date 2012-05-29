@@ -1,5 +1,6 @@
 package com.alibaba.intruder.agent.util;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -50,9 +51,12 @@ public class ParameterReader {
 		String classPathStr = props.getProperty("loadNewClass.newClassPath");
 		String[] classpaths = classPathStr.split(NEW_CLASSPATH_SPLIT);
 		List<URL> urls = new ArrayList<URL>();
+
 		for (String cp : classpaths) {
-			urls.add(new URL("file:" + cp));
+			File tmpFile = new File(cp);
+			urls.add(new URL("file:" + tmpFile.getAbsolutePath()));
 		}
+		
 		return urls.toArray(new URL[urls.size()]);
 	}
 }

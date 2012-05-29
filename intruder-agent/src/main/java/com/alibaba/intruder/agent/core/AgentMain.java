@@ -59,10 +59,8 @@ public class AgentMain {
 
 	private static void handle(Instrumentation inst, Class<?> c)
 			throws Exception {
-
 		URLClassLoader ucl = (URLClassLoader) c.getClassLoader();
 		addURLToClassLoader(ucl);
-
 		if (parameters.getType().equals(Type.loadNewClass)) {
 			runNewClass(ucl);
 		} else if (parameters.getType().equals(Type.transformClass)) {
@@ -135,5 +133,4 @@ public class AgentMain {
 	private static boolean isTargetClass(Class<?> c) {
 		return c.getName().equalsIgnoreCase(parameters.getTargetClassName());
 	}
-
 }

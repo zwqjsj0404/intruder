@@ -6,10 +6,10 @@
 	<packaging>pom</packaging>
 	<name>Intruder :: all</name>
 	<version>${project.version}</version>
-	
+
 	<properties>
-			<project.version>0.1</project.version>
-			<jdk.version>1.6</jdk.version>
+		<project.version>0.1</project.version>
+		<jdk.version>1.6</jdk.version>
 	</properties>
 
 	<modules>
@@ -32,10 +32,21 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-	
+
+
+
 	<build>
-	<plugins>
-		<plugin>
+<!-- 		<pluginManagement>
+			<plugins>
+				<plugin>
+					<artifactId>maven-antrun-plugin</artifactId>
+					<version>1.6</version>
+				</plugin>
+			</plugins>
+		</pluginManagement> -->
+		
+		<plugins>
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
@@ -43,9 +54,9 @@
 					<target>${jdk.version}</target>
 				</configuration>
 			</plugin>
-	</plugins>
+		</plugins>
 	</build>
-	
+
 	<developers>
 		<developer>
 			<name>zili.dengzl</name>
@@ -60,5 +71,5 @@
 			<organization>alibaba-b2b</organization>
 		</developer>
 	</developers>
-	
+
 </project>

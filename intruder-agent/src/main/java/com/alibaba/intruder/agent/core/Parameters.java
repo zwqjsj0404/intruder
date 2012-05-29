@@ -4,7 +4,7 @@ import java.net.URL;
 
 /**
  * @author zili.dengzl
- *
+ * 
  */
 public class Parameters {
 	public enum Type {
@@ -17,6 +17,15 @@ public class Parameters {
 
 	private URL[] newClassPath;
 	private String newClassFullName;
+	private String[] parameters;
+
+	public String[] getParameters() {
+		return parameters;
+	}
+
+	public void setParameters(String[] parameters) {
+		this.parameters = parameters;
+	}
 
 	public String getLoglevel() {
 		return loglevel;

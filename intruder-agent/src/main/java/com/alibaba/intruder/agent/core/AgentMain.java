@@ -75,7 +75,7 @@ public class AgentMain {
 
 		Class<?> clazz = ucl.loadClass(parameters.getNewClassFullName());
 		Method method = clazz.getMethod("execute");
-		method.invoke(clazz.newInstance());
+		method.invoke(clazz.newInstance(), parameters.getParameters());
 	}
 
 	private static boolean isTargetClass(Class<?> c) {

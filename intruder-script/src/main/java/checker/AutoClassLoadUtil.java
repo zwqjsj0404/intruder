@@ -12,7 +12,7 @@ import java.util.Set;
 
 /**
  * @author dragon.caol
- *
+ * 
  */
 public class AutoClassLoadUtil {
 
@@ -26,7 +26,7 @@ public class AutoClassLoadUtil {
 	 * 
 	 * @throws Exception
 	 */
-	public void execute() throws Exception {
+	public void execute(String[] args) throws Exception {
 		new per().start();
 	}
 
@@ -36,26 +36,39 @@ public class AutoClassLoadUtil {
 			try {
 				FilterClass f = new FilterClass();
 				Set<String> listClass = f.findClassfromDir(pathDir);
-				System.out.println("AutoClassLoadUtil classLoader=" + AutoClassLoadUtil.class.getClassLoader());
-				System.out.println("AutoClassLoadUtil parent classLoader=" + AutoClassLoadUtil.class.getClassLoader().getParent());
-				
+				Thread.sleep(1000);
 				for (String class1 : listClass) {
 					System.out.println("begin load:" + class1);
 					try {
 						Class.forName(class1);
-						System.out.println("end load:" + class1);
 					} catch (Throwable e) {
-						System.out.println("begin error:" + class1 + e.getMessage());
-						e.printStackTrace();
+						// for inter class
+						try {
+							int i = class1.lastIndexOf(".");
+							String last = null;
+							if (i > 0) {
+								last = class1.substring(0, i) + "$"
+										+ class1.substring(i + 1);
+							} else {
+								last = class1;
+							}
+							Class.forName(last);
+						} catch (Throwable ee) {
+							System.err.println("begin error:" + e.getMessage()
+									+ ",from:" + e.getMessage());
+							ee.printStackTrace();
+							System.err.println(" is ");
+							e.printStackTrace();
+						}
 					}
-					
+					System.out.println("end load:" + class1);
 				}
+
 			} catch (Throwable e) {
-				System.err.println("begin error:" + e.getMessage() + "," + e.getStackTrace());
+				System.err.println("begin error:" + e.getMessage());
 				e.printStackTrace();
 			}
 		}
-
 	}
 
 	private class FilterClass {
@@ -90,12 +103,14 @@ public class AutoClassLoadUtil {
 			return listjava;
 		}
 
-		private Set<String> filterClassFromSrc(String javaPath) throws Exception {
+		private Set<String> filterClassFromSrc(String javaPath)
+				throws Exception {
 			File f = new File(javaPath);
 			Set<String> listClass = new HashSet<String>();
 			if (f.isFile()) {
 				InputStream in = new FileInputStream(f);
-				BufferedReader re = new BufferedReader(new InputStreamReader(in, "GBK"));
+				BufferedReader re = new BufferedReader(new InputStreamReader(
+						in, "GBK"));
 				String line = null;
 				while ((line = re.readLine()) != null) {
 					if (line.contains("import")) {
@@ -103,13 +118,17 @@ public class AutoClassLoadUtil {
 
 						} else {
 							String[] lines = line.split("\\s+");
-							if (!"static".equals(lines[1])) {
-								listClass.add(lines[1].substring(0, lines[1].length() - 1));
+							if ("static".equals(lines[1])) {
+
+							} else {
+								String temp = lines[1];
+								listClass.add(temp.split(";")[0]);
 							}
 						}
 						continue;
 					}
-					if (line.contains("class") || line.contains("interface")) {
+					if (line.contains("class") || line.contains("interface")
+							|| line.contains("@interface")) {
 						break;
 					}
 				}

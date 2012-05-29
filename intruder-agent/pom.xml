@@ -28,14 +28,6 @@
 		</dependency>
 		<dependency>
 			<groupId>com.alibaba</groupId>
-			<artifactId>tools</artifactId>
-			<version>1.6.0</version>
-			<scope>system</scope>
-			<systemPath>${java.home}/../lib/tools.jar</systemPath>
-		</dependency>
-
-		<dependency>
-			<groupId>com.alibaba</groupId>
 			<artifactId>intruder-script</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -141,6 +133,61 @@
 
 		</plugins>
 	</build>
+
+
+	<profiles>
+		<profile>
+			<id>window-dependency</id>
+			<activation>
+				<os>
+					<family>Windows</family>
+				</os>
+			</activation>
+			<dependencies>
+				<dependency>
+					<groupId>sun.jdk</groupId>
+					<artifactId>tools</artifactId>
+					<version>1.6.0</version>
+					<scope>system</scope>
+					<systemPath>${java.home}/../lib/tools.jar</systemPath>
+				</dependency>
+			</dependencies>
+		</profile>
+		<profile>
+			<id>mac-dependency</id>
+			<activation>
+				<os>
+					<family>mac</family>
+				</os>
+			</activation>
+			<dependencies>
+				<dependency>
+					<groupId>sun.jdk</groupId>
+					<artifactId>tools</artifactId>
+					<version>1.6.0</version>
+					<scope>system</scope>
+					<systemPath>${java.home}/../lib/tools.jar</systemPath>
+				</dependency>
+			</dependencies>
+		</profile>
+		<profile>
+			<id>linux-dependency</id>
+			<activation>
+				<os>
+					<family>linux</family>
+				</os>
+			</activation>
+			<dependencies>
+				<dependency>
+					<groupId>sun.jdk</groupId>
+					<artifactId>tools</artifactId>
+					<version>1.6.0</version>
+					<scope>system</scope>
+					<systemPath>${java.home}/../lib/tools.jar</systemPath>
+				</dependency>
+			</dependencies>
+		</profile>
+	</profiles>
 
 
 

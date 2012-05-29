@@ -7,7 +7,7 @@ import com.sun.tools.attach.VirtualMachine;
 /**
  * @author zili.dengzl
  * 
- *         <code>java  client.Client java-instrument.jar 1234</<code>
+ * <code>java com.alibaba.intruder.agent.core.Client java-instrument.jar 1234</<code>
  * 
  * since client is package into java-instrument.jar ,we should use 
  * <code>java  -jar java-instrument.jar java-instrument.jar 1234</<code> aslo

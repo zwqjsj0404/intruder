@@ -10,7 +10,6 @@ import java.util.Properties;
 import com.alibaba.intruder.agent.core.Parameters;
 import com.alibaba.intruder.agent.core.Parameters.Type;
 
-
 /**
  * ParameterReader, read parameters from the giving file path
  * 
@@ -36,12 +35,14 @@ public class ParameterReader {
 		params.setTargetClassName(props.getProperty("targetClassName"));
 
 		params.setNewClassPath(readURLs(props));
-		params.setNewClassFullName(props.getProperty("loadNewClass.newClassFullName"));
+		params.setNewClassFullName(props
+				.getProperty("loadNewClass.newClassFullName"));
 
 		return params;
 	}
 
-	private static URL[] readURLs(Properties props) throws MalformedURLException {
+	private static URL[] readURLs(Properties props)
+			throws MalformedURLException {
 		String classPathStr = props.getProperty("loadNewClass.newClassPath");
 		String[] classpaths = classPathStr.split(":");
 		List<URL> urls = new ArrayList<URL>();

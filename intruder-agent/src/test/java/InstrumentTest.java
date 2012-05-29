@@ -3,27 +3,34 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Arrays;
 
-import com.alibaba.intruder.agent.util.Logger;
-
-
+/**
+ * @author zili.dengzl
+ *
+ */
 public class InstrumentTest {
 
 	/**
-	 * 测试方法： 先在D:\learn\dzl\java-instrument\target\classes下 java InstrumentTest 然后在java -jar
-	 * java-instrument-0.0.1-SNAPSHOT.jar java-instrument-0.0.1-SNAPSHOT.jar 6832
+	 * 测试方法： 先在D:\learn\dzl\java-instrument\target\classes下 java InstrumentTest
+	 * 然后在java -jar java-instrument-0.0.1-SNAPSHOT.jar
+	 * java-instrument-0.0.1-SNAPSHOT.jar 6832
 	 * D:\learn\dzl\java-instrument\target\classes\agent.properties
 	 */
+
 	public static void main(String[] args) throws Exception {
-//		try {
-//			Class.forName("TestNewClass");
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-		System.out.println("main's cl=" + InstrumentTest.class.getClassLoader());
-		System.out.println("URLClassLoader's classpath is " + Arrays.asList(((URLClassLoader)InstrumentTest.class.getClassLoader()).getURLs()));
+		// try {
+		// Class.forName("TestNewClass");
+		// } catch (Exception e) {
+		// e.printStackTrace();
+		// }
+		System.out
+				.println("main's cl=" + InstrumentTest.class.getClassLoader());
+		System.out.println("URLClassLoader's classpath is "
+				+ Arrays.asList(((URLClassLoader) InstrumentTest.class
+						.getClassLoader()).getURLs()));
 
 		URL url = new URL("file:/D:/learn/dzl/java-instrument/target/classes/");
-		MyClassLoader loader = new MyClassLoader(new URL[] { url }, InstrumentTest.class.getClassLoader());
+		MyClassLoader loader = new MyClassLoader(new URL[] { url },
+				InstrumentTest.class.getClassLoader());
 		System.out.println("new cl=" + loader);
 		Class<?> c = loader.loadClass("TestClass");
 		Object o = c.newInstance();
@@ -46,7 +53,8 @@ class MyClassLoader extends URLClassLoader {
 		this.parent = parent;
 	}
 
-	protected synchronized Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
+	protected synchronized Class<?> loadClass(String name, boolean resolve)
+			throws ClassNotFoundException {
 		Class<?> c = findLoadedClass(name);
 		if (c == null) {
 			try {

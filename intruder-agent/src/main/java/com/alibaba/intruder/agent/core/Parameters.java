@@ -2,6 +2,10 @@ package com.alibaba.intruder.agent.core;
 
 import java.net.URL;
 
+/**
+ * @author zili.dengzl
+ *
+ */
 public class Parameters {
 	public enum Type {
 		loadNewClass, transformClass
@@ -14,7 +18,6 @@ public class Parameters {
 	private URL[] newClassPath;
 	private String newClassFullName;
 
-
 	public String getLoglevel() {
 		return loglevel;
 	}
@@ -22,7 +25,7 @@ public class Parameters {
 	public void setLoglevel(String loglevel) {
 		this.loglevel = loglevel;
 	}
-	
+
 	public Type getType() {
 		return type;
 	}

@@ -16,17 +16,17 @@ import java.util.Set;
  */
 public class AutoClassLoadUtil {
 
-	private String pathDir = "/home/eve/eve";
-
-	public void setPathDir(String pathDir) {
-		this.pathDir = pathDir;
-	}
+	private String pathDir = null;
 
 	/**
 	 * 
 	 * @throws Exception
 	 */
 	public void execute(String[] args) throws Exception {
+		if (args.length != 1) {
+			throw new IllegalArgumentException("the parameters length is 1");
+		}
+		pathDir = args[0];
 		new per().start();
 	}
 

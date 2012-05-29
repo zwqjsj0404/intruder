@@ -35,21 +35,21 @@ public class AutoClassLoadUtil {
 		public void run() {
 			try {
 				FilterClass f = new FilterClass();
-				Set<String> listClass = f.findClassfromDir(pathDir);
+//				Set<String> listClass = f.findClassfromDir(pathDir);
 				System.out.println("AutoClassLoadUtil classLoader=" + AutoClassLoadUtil.class.getClassLoader());
 				System.out.println("AutoClassLoadUtil parent classLoader=" + AutoClassLoadUtil.class.getClassLoader().getParent());
 				
-				for (String class1 : listClass) {
-					System.out.println("begin load:" + class1);
-					try {
-						Class.forName(class1);
-						System.out.println("end load:" + class1);
-					} catch (Throwable e) {
-						System.out.println("begin error:" + class1 + e.getMessage());
-						e.printStackTrace();
-					}
-					
-				}
+//				for (String class1 : listClass) {
+//					System.out.println("begin load:" + class1);
+//					try {
+//						Class.forName(class1);
+//						System.out.println("end load:" + class1);
+//					} catch (Throwable e) {
+//						System.out.println("begin error:" + class1 + e.getMessage());
+//						e.printStackTrace();
+//					}
+//					
+//				}
 			} catch (Throwable e) {
 				System.err.println("begin error:" + e.getMessage() + "," + e.getStackTrace());
 				e.printStackTrace();

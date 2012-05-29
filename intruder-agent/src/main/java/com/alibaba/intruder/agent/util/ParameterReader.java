@@ -31,6 +31,7 @@ public class ParameterReader {
 		Parameters params = new Parameters();
 		Properties props = readProperties(filePath);
 
+		params.setLoglevel(props.getProperty("logLevel"));
 		params.setType(Type.valueOf(props.getProperty("type")));
 		params.setTargetClassName(props.getProperty("targetClassName"));
 

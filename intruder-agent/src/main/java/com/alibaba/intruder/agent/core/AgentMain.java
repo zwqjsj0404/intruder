@@ -3,8 +3,11 @@ package com.alibaba.intruder.agent.core;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
 import java.lang.instrument.UnmodifiableClassException;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Arrays;
 
 import com.alibaba.intruder.agent.core.Parameters.Type;
 import com.alibaba.intruder.agent.util.Logger;
@@ -31,7 +34,9 @@ public class AgentMain {
 		System.out.println("agentmain start...");
 
 		parameters = ParameterReader.readParameters(filePath);
-
+		
+		initLog();
+		
 		loadAgentForClass(inst);
 
 		Logger.info("Agent done!");
@@ -67,15 +72,39 @@ public class AgentMain {
 
 	}
 
+	/**
+	 * c's ClassLoader must be URLClassLoader, or terminate
+	 * 
+	 * @param c
+	 * @throws Exception
+	 */
 	private static void loadNewClass(Class<?> c) throws Exception {
-		URLClassLoader ucl = new URLClassLoader(parameters.getNewClassPath(),
-				c.getClassLoader());
-		Logger.info("URLClassLoader " + ucl + " will load "
-				+ parameters.getNewClassFullName());
 
+		URLClassLoader ucl = getClassLoader(c);
+		Logger.info("URLClassLoader " + ucl + " loaded "
+				+ parameters.getNewClassFullName());
 		Class<?> clazz = ucl.loadClass(parameters.getNewClassFullName());
 		Method method = clazz.getMethod("execute");
 		method.invoke(clazz.newInstance());
+	}
+
+	private static URLClassLoader getClassLoader(Class<?> c) throws Exception {
+		// URLClassLoader ucl = new URLClassLoader(parameters.getNewClassPath(),
+		// c.getClassLoader());
+
+		URLClassLoader ucl = (URLClassLoader) c.getClassLoader();
+
+		Logger.debug("before add:" + Arrays.asList(ucl.getURLs()).toString());
+
+		Method addURLMethod = ucl.getClass().getMethod("addURL", URL.class);
+		for (URL url : parameters.getNewClassPath()) {
+			addURLMethod.invoke(ucl, url);
+		}
+
+		Logger.debug("after add:" + Arrays.asList(ucl.getURLs()).toString());
+
+		return ucl;
+
 	}
 
 	private static boolean isTargetClass(Class<?> c) {

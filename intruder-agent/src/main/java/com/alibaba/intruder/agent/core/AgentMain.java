@@ -5,6 +5,7 @@ import java.lang.instrument.Instrumentation;
 import java.lang.instrument.UnmodifiableClassException;
 import java.lang.reflect.Method;
 import java.net.URLClassLoader;
+import java.util.Arrays;
 
 import com.alibaba.intruder.agent.core.Parameters.Type;
 import com.alibaba.intruder.agent.util.Logger;
@@ -70,11 +71,10 @@ public class AgentMain {
 	private static void loadNewClass(Class<?> c) throws Exception {
 		URLClassLoader ucl = new URLClassLoader(parameters.getNewClassPath(),
 				c.getClassLoader());
-		Logger.info("URLClassLoader " + ucl + " will load "
-				+ parameters.getNewClassFullName());
-
+		Logger.info("URLClassLoader (" + Arrays.toString(ucl.getURLs()) + ")"
+				+ ucl + " will load " + parameters.getNewClassFullName());
 		Class<?> clazz = ucl.loadClass(parameters.getNewClassFullName());
-		Method method = clazz.getMethod("execute");
+		Method method = clazz.getMethod("execute", String.class);
 		method.invoke(clazz.newInstance(), parameters.getParameters());
 	}
 

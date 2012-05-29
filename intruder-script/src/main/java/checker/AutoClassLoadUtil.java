@@ -22,11 +22,10 @@ public class AutoClassLoadUtil {
 	 * 
 	 * @throws Exception
 	 */
-	public void execute(String[] args) throws Exception {
-		if (args.length != 1) {
-			throw new IllegalArgumentException("the parameters length is 1");
-		}
-		pathDir = args[0];
+	public void execute(String args) throws Exception {
+
+		pathDir = args.split("\\s+")[0];
+		System.err.println("path is" + pathDir);
 		new per().start();
 	}
 

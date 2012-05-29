@@ -37,8 +37,7 @@ public class ParameterReader {
 		params.setNewClassPath(readURLs(props));
 		params.setNewClassFullName(props
 				.getProperty("loadNewClass.newClassFullName"));
-		String parameters = props.getProperty("targetParameters");
-		params.setParameters(parameters.split("\\s+"));
+		params.setParameters(props.getProperty("targetParameters"));
 		return params;
 	}
 

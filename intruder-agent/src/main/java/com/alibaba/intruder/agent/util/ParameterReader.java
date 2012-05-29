@@ -19,6 +19,8 @@ import com.alibaba.intruder.agent.core.Parameters.Type;
  * 
  */
 public class ParameterReader {
+	private static final String NEW_CLASSPATH_SPLIT = "##";
+
 	public static Properties readProperties(String filePath) throws Exception {
 		Properties props = new Properties();
 		FileInputStream in = new FileInputStream(filePath);
@@ -38,14 +40,15 @@ public class ParameterReader {
 		params.setNewClassPath(readURLs(props));
 		params.setNewClassFullName(props
 				.getProperty("loadNewClass.newClassFullName"));
-
+		params.setNewClassExecuteMethodArgs(props
+				.getProperty("loadNewClass.executeMethodArgs"));
 		return params;
 	}
 
 	private static URL[] readURLs(Properties props)
 			throws MalformedURLException {
 		String classPathStr = props.getProperty("loadNewClass.newClassPath");
-		String[] classpaths = classPathStr.split(":");
+		String[] classpaths = classPathStr.split(NEW_CLASSPATH_SPLIT);
 		List<URL> urls = new ArrayList<URL>();
 		for (String cp : classpaths) {
 			urls.add(new URL("file:" + cp));

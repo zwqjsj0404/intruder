@@ -17,14 +17,14 @@ public class Parameters {
 
 	private URL[] newClassPath;
 	private String newClassFullName;
-	private String[] parameters;
+	private String newClassExecuteMethodArgs;
 
-	public String[] getParameters() {
-		return parameters;
+	public String getNewClassExecuteMethodArgs() {
+		return newClassExecuteMethodArgs;
 	}
 
-	public void setParameters(String[] parameters) {
-		this.parameters = parameters;
+	public void setNewClassExecuteMethodArgs(String newClassExecuteMethodArgs) {
+		this.newClassExecuteMethodArgs = newClassExecuteMethodArgs;
 	}
 
 	public String getLoglevel() {

@@ -59,10 +59,8 @@ public class AgentMain {
 
 	private static void handle(Instrumentation inst, Class<?> c)
 			throws Exception {
-		
 		URLClassLoader ucl = (URLClassLoader) c.getClassLoader();
 		addURLToClassLoader(ucl);
-
 		if (parameters.getType().equals(Type.loadNewClass)) {
 			runNewClass(ucl);
 		} else if (parameters.getType().equals(Type.transformClass)) {
@@ -83,11 +81,12 @@ public class AgentMain {
 			throws ClassNotFoundException, NoSuchMethodException,
 			IllegalAccessException, InvocationTargetException,
 			InstantiationException {
-		Logger.info("URLClassLoader " + ucl + " loaded "
+		Logger.info("URLClassLoader: " + ucl + " loaded "
 				+ parameters.getNewClassFullName());
 		Class<?> clazz = ucl.loadClass(parameters.getNewClassFullName());
-		Method method = clazz.getMethod("execute");
-		method.invoke(clazz.newInstance());
+		Method method = clazz.getMethod("execute", String.class);
+		method.invoke(clazz.newInstance(),
+				parameters.getNewClassExecuteMethodArgs());
 	}
 
 	/**
@@ -134,6 +133,4 @@ public class AgentMain {
 	private static boolean isTargetClass(Class<?> c) {
 		return c.getName().equalsIgnoreCase(parameters.getTargetClassName());
 	}
-	
-	
 }

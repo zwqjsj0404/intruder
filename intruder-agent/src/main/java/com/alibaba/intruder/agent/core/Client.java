@@ -38,10 +38,8 @@ public class Client {
 
 	private static void printUsage() {
 		System.out
-				.println("Usage: java [-Dlog.level=debug] -jar java-instrument.jar java-instrument.jar  <argFilePath> <pid>");
-		System.out.println("log.level:  include debug, info, error");
-		System.out
-				.println("argFilePath:  should be absolute path of a properties file");
+				.println("Usage: java -jar intruder-agent-0.1.jar intruder-agent-0.1.jar <argFilePath> <pid>");
+		System.out.println("argFilePath: absolute path of a properties file");
 
 		System.out
 				.println("other problems, please contact zili.dengzl@alibaba-inc.com,dragon.caol@alibaba.com");

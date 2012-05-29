@@ -7,7 +7,7 @@ import com.sun.tools.attach.VirtualMachine;
 /**
  * @author zili.dengzl
  * 
- * <code>java  client.Client java-instrument.jar 1234</<code>
+ *         <code>java  client.Client java-instrument.jar 1234</<code>
  * 
  * since client is package into java-instrument.jar ,we should use 
  * <code>java  -jar java-instrument.jar java-instrument.jar 1234</<code> aslo
@@ -38,11 +38,11 @@ public class Client {
 
 	private static void printUsage() {
 		System.out
-				.println("Usage: java [-Dlog.level=debug] -jar java-instrument.jar java-instrument.jar  <argFilePath> <pid>");
-		System.out.println("log.level:  include debug, info, error");
-		System.out.println("argFilePath:  should be absolute path of a properties file");
+				.println("Usage: java -jar intruder-agent-0.1.jar intruder-agent-0.1.jar <argFilePath> <pid>");
+		System.out.println("argFilePath: absolute path of a properties file");
 
-		System.out.println("other problems, please contact zili.dengzl@alibaba-inc.com,dragon.caol@alibaba.com");
+		System.out
+				.println("other problems, please contact zili.dengzl@alibaba-inc.com,dragon.caol@alibaba.com");
 
 	}
 

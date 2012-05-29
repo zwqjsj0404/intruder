@@ -57,7 +57,8 @@ public class Logger {
 		try {
 			Logger.setLevel(LEVEL.valueOf(levelConf));
 		} catch (Exception e) {
-			System.out.println(levelConf + " is not a valid format, log level is set to info ");
+			System.out.println(levelConf
+					+ " is not a valid format, log level is set to info ");
 			Logger.setLevel(LEVEL.info);
 		}
 	}

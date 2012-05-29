@@ -62,7 +62,6 @@ public class AutoClassLoadUtil {
 					}
 					System.out.println("end load:" + class1);
 				}
-
 			} catch (Throwable e) {
 				System.err.println("begin error:" + e.getMessage());
 				e.printStackTrace();

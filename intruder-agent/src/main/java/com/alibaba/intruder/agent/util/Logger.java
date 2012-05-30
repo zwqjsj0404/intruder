@@ -1,6 +1,5 @@
 package com.alibaba.intruder.agent.util;
 
-import com.alibaba.intruder.agent.core.Parameters;
 
 /**
  * a very very simple logger
@@ -49,16 +48,16 @@ public class Logger {
 	public static void initLog(String logLevelConf) {
 
 		if (null == logLevelConf) {
-			Logger.setLevel(LEVEL.info);
+			System.out.println("loglevel is null, use default level info ");
 			return;
 		}
 
 		try {
 			Logger.setLevel(LEVEL.valueOf(logLevelConf));
+			System.out.println("set log level to "+ logLevelConf);
 		} catch (Exception e) {
 			System.out.println(logLevelConf
-					+ " is not a valid format, log level is set to info ");
-			Logger.setLevel(LEVEL.info);
+					+ " is not a valid format, use default level info ");
 		}
 	}
 }

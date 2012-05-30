@@ -33,7 +33,7 @@ public class AgentMain {
 			throws Exception, UnmodifiableClassException, InterruptedException {
 		System.out.println("agentmain start...");
 
-		parameters = ParameterReader.readParameters(filePath);
+		parameters = Parameters.readParameters(filePath);
 
 		Logger.initLog(parameters.getLoglevel());
 
@@ -78,15 +78,11 @@ public class AgentMain {
 	}
 
 	private static void runNewClass(URLClassLoader ucl)
-			throws ClassNotFoundException, NoSuchMethodException,
-			IllegalAccessException, InvocationTargetException,
-			InstantiationException {
-		Logger.info("URLClassLoader: " + ucl + " loaded "
-				+ parameters.getNewClassFullName());
+			throws Exception {
+		Logger.info(ucl + " loaded " + parameters.getNewClassFullName());
 		Class<?> clazz = ucl.loadClass(parameters.getNewClassFullName());
 		Method method = clazz.getMethod("execute", String.class);
-		method.invoke(clazz.newInstance(),
-				parameters.getNewClassExecuteMethodArgs());
+		method.invoke(clazz.newInstance(), parameters.getNewClassExecuteMethodArgs());
 	}
 
 	/**

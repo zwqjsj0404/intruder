@@ -28,7 +28,7 @@ public class InstrumentTest {
 		System.out.println("Appclassloader's classpath is "
 				+ Arrays.asList(((URLClassLoader) InstrumentTest.class.getClassLoader()).getURLs()));
 
-		File jar = new File("lib/intruder-script-0.1.jar");
+		File jar = new File("intruder-agent-0.1.jar");
 		URL url = new URL("file:" + jar.getAbsolutePath());
 
 		System.out.println("url=" + url.getPath());

@@ -1,0 +1,11 @@
+intruder is a intrument tool like btrace.
+
+2. a sample guide of test 
+
+1). download intruder.tar.gz to a directory
+2). tar -vxzf intruder.tar.gz 
+3). cd intruder
+3). sh bin/runTest.sh
+4). open another consloe, cd ${yourDownloadDir}/intruder
+5). jps, find pid of "InstrumentTest"
+6). sh bin/intruder.sh <pid> 

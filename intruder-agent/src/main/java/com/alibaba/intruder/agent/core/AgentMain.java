@@ -1,5 +1,7 @@
 package com.alibaba.intruder.agent.core;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
 import java.lang.instrument.UnmodifiableClassException;
@@ -8,6 +10,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.security.SecureClassLoader;
 import java.util.Arrays;
+import java.util.jar.JarFile;
 
 import com.alibaba.intruder.agent.core.Parameters.Type;
 import com.alibaba.intruder.agent.transform.DefaultTransformer;
@@ -60,7 +63,7 @@ public class AgentMain {
 			throws Exception {
 		URLClassLoader ucl = (URLClassLoader) c.getClassLoader();
 		addURLToClassLoader(ucl);
-		
+
 		if (parameters.getType().equals(Type.loadNewClass)) {
 			runNewClass(ucl);
 		} else if (parameters.getType().equals(Type.transformClass)) {
@@ -70,11 +73,22 @@ public class AgentMain {
 	}
 
 	private static void transformClass(Instrumentation inst, Class<?> c)
-			throws UnmodifiableClassException {
+			throws Exception {
+		addURLToAppClassLoader(inst);
 		ClassFileTransformer transformer = getTransformer();
 		inst.addTransformer(transformer, true);
 		inst.retransformClasses(c);
 		inst.removeTransformer(transformer);
+	}
+
+	private static void addURLToAppClassLoader(Instrumentation inst)
+			throws Exception {
+
+		for (File file : parameters.getTransformerLibFiles()) {
+			Logger.debug("add file " + file + " to SystemClassLoader ");
+			inst.appendToSystemClassLoaderSearch(new JarFile(file));
+		}
+
 	}
 
 	private static ClassFileTransformer getTransformer() {
@@ -84,7 +98,7 @@ public class AgentMain {
 					parameters.getTransformer()).newInstance();
 			Logger.info("use " + transformer);
 		} catch (Exception e) {
-			e.printStackTrace();
+			// e.printStackTrace();
 			Logger.info("use defaultTransformer");
 			transformer = new DefaultTransformer();
 		}

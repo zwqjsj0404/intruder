@@ -39,7 +39,7 @@ public class Logger {
 	}
 
 	private static void sysoutLog(String msg, LEVEL requirelevel) {
-		if (level.compareTo(requirelevel) > 0) {
+		if (level.compareTo(requirelevel) >= 0) {
 			System.out.println(msg);
 		}
 	}
@@ -62,5 +62,6 @@ public class Logger {
 
 	public static void main(String[] args) {
 		System.out.println(LEVEL.info.compareTo(LEVEL.error));
+		Logger.initLog("error");
 	}
 }

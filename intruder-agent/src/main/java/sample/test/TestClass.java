@@ -5,12 +5,18 @@ package sample.test;
  * 
  */
 public class TestClass {
-	public static int flag = 0;
+	public static int flagFoo = 0;
+	public static int flagBar = 0;
 	static {
-		System.out.println("TestClass init... TestClass's classloader is " + TestClass.class.getClassLoader());
+		System.out.println("TestClass init... TestClass's classloader is "
+				+ TestClass.class.getClassLoader());
 	}
 
-	static public void foo() {
-		System.out.println("in method f, flag=" + flag++);
+	public void foo() {
+		System.out.println("in method foo, flag=" + flagFoo++);
+	}
+
+	public void bar() {
+		System.out.println("in method bar, flag=" + flagBar++);
 	}
 }

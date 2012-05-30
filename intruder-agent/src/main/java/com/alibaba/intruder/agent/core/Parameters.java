@@ -26,8 +26,17 @@ public class Parameters {
 	private URL[] newClassPath;
 	private String newClassFullName;
 	private String newClassExecuteMethodArgs;
-	
+
 	private String transformer;
+	private List<File> transformerLibFiles;
+
+	public List<File> getTransformerLibFiles() {
+		return transformerLibFiles;
+	}
+
+	public void setTransformerLibFiles(List<File> transformerLibFiles) {
+		this.transformerLibFiles = transformerLibFiles;
+	}
 
 	public String getTransformer() {
 		return transformer;
@@ -84,9 +93,7 @@ public class Parameters {
 	public void setNewClassFullName(String newClassFullName) {
 		this.newClassFullName = newClassFullName;
 	}
-	
-	
-	
+
 	/**
 	 * read util of parameters
 	 */
@@ -103,23 +110,34 @@ public class Parameters {
 	public static Parameters readParameters(String filePath) throws Exception {
 		Parameters params = new Parameters();
 		Properties props = readProperties(filePath);
-		
-		//basic
+
+		// basic
 		params.setLoglevel(props.getProperty("logLevel"));
 		params.setType(Type.valueOf(props.getProperty("type")));
 		params.setTargetClassName(props.getProperty("targetClassName"));
 
-		//loadNewClass
+		// loadNewClass
 		params.setNewClassPath(readURLs(props));
 		params.setNewClassFullName(props
 				.getProperty("loadNewClass.newClassFullName"));
 		params.setNewClassExecuteMethodArgs(props
 				.getProperty("loadNewClass.executeMethodArgs"));
-		
-		//transformClass
+
+		// transformClass
 		params.setTransformer(props.getProperty("transformClass.transformer"));
-		
+		params.setTransformerLibFiles(readLibFiles(props));
+
 		return params;
+	}
+
+	private static List<File> readLibFiles(Properties props) {
+		List<File> files = new ArrayList<File>();
+		String filePathStr = props.getProperty("transformClass.libFilePath");
+		String[] filePaths = filePathStr.split(NEW_CLASSPATH_SPLIT);
+		for (String filePath : filePaths) {
+			files.add(new File(filePath));
+		}
+		return files;
 	}
 
 	private static URL[] readURLs(Properties props)
@@ -132,7 +150,7 @@ public class Parameters {
 			File tmpFile = new File(cp);
 			urls.add(new URL("file:" + tmpFile.getAbsolutePath()));
 		}
-		
+
 		return urls.toArray(new URL[urls.size()]);
 	}
 

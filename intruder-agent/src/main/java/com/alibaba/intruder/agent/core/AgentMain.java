@@ -3,7 +3,6 @@ package com.alibaba.intruder.agent.core;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
 import java.lang.instrument.UnmodifiableClassException;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -12,7 +11,6 @@ import java.util.Arrays;
 
 import com.alibaba.intruder.agent.core.Parameters.Type;
 import com.alibaba.intruder.agent.util.Logger;
-import com.alibaba.intruder.agent.util.ParameterReader;
 
 /**
  * now support load a new class into the classloader who load the target class,

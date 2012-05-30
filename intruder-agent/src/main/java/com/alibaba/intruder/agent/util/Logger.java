@@ -1,6 +1,5 @@
 package com.alibaba.intruder.agent.util;
 
-
 /**
  * a very very simple logger
  * 
@@ -40,7 +39,7 @@ public class Logger {
 	}
 
 	private static void sysoutLog(String msg, LEVEL requirelevel) {
-		if (level.equals(requirelevel)) {
+		if (level.compareTo(requirelevel) > 0) {
 			System.out.println(msg);
 		}
 	}
@@ -54,10 +53,14 @@ public class Logger {
 
 		try {
 			Logger.setLevel(LEVEL.valueOf(logLevelConf));
-			System.out.println("set log level to "+ logLevelConf);
+			System.out.println("set log level to " + logLevelConf);
 		} catch (Exception e) {
 			System.out.println(logLevelConf
 					+ " is not a valid format, use default level info ");
 		}
+	}
+
+	public static void main(String[] args) {
+		System.out.println(LEVEL.info.compareTo(LEVEL.error));
 	}
 }

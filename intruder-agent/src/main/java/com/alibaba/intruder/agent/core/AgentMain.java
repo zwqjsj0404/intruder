@@ -10,6 +10,7 @@ import java.security.SecureClassLoader;
 import java.util.Arrays;
 
 import com.alibaba.intruder.agent.core.Parameters.Type;
+import com.alibaba.intruder.agent.transform.DefaultTransformer;
 import com.alibaba.intruder.agent.util.Logger;
 
 /**
@@ -59,6 +60,7 @@ public class AgentMain {
 			throws Exception {
 		URLClassLoader ucl = (URLClassLoader) c.getClassLoader();
 		addURLToClassLoader(ucl);
+		
 		if (parameters.getType().equals(Type.loadNewClass)) {
 			runNewClass(ucl);
 		} else if (parameters.getType().equals(Type.transformClass)) {
@@ -69,18 +71,32 @@ public class AgentMain {
 
 	private static void transformClass(Instrumentation inst, Class<?> c)
 			throws UnmodifiableClassException {
-		ClassFileTransformer transformer = new Transformer();
+		ClassFileTransformer transformer = getTransformer();
 		inst.addTransformer(transformer, true);
 		inst.retransformClasses(c);
 		inst.removeTransformer(transformer);
 	}
 
-	private static void runNewClass(URLClassLoader ucl)
-			throws Exception {
+	private static ClassFileTransformer getTransformer() {
+		ClassFileTransformer transformer = null;
+		try {
+			transformer = (ClassFileTransformer) Class.forName(
+					parameters.getTransformer()).newInstance();
+			Logger.info("use " + transformer);
+		} catch (Exception e) {
+			e.printStackTrace();
+			Logger.info("use defaultTransformer");
+			transformer = new DefaultTransformer();
+		}
+		return transformer;
+	}
+
+	private static void runNewClass(URLClassLoader ucl) throws Exception {
 		Logger.info(ucl + " loaded " + parameters.getNewClassFullName());
 		Class<?> clazz = ucl.loadClass(parameters.getNewClassFullName());
 		Method method = clazz.getMethod("execute", String.class);
-		method.invoke(clazz.newInstance(), parameters.getNewClassExecuteMethodArgs());
+		method.invoke(clazz.newInstance(),
+				parameters.getNewClassExecuteMethodArgs());
 	}
 
 	/**

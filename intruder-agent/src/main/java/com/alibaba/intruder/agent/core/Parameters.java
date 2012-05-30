@@ -26,6 +26,16 @@ public class Parameters {
 	private URL[] newClassPath;
 	private String newClassFullName;
 	private String newClassExecuteMethodArgs;
+	
+	private String transformer;
+
+	public String getTransformer() {
+		return transformer;
+	}
+
+	public void setTransformer(String transformer) {
+		this.transformer = transformer;
+	}
 
 	public String getNewClassExecuteMethodArgs() {
 		return newClassExecuteMethodArgs;
@@ -93,16 +103,22 @@ public class Parameters {
 	public static Parameters readParameters(String filePath) throws Exception {
 		Parameters params = new Parameters();
 		Properties props = readProperties(filePath);
-
+		
+		//basic
 		params.setLoglevel(props.getProperty("logLevel"));
 		params.setType(Type.valueOf(props.getProperty("type")));
 		params.setTargetClassName(props.getProperty("targetClassName"));
 
+		//loadNewClass
 		params.setNewClassPath(readURLs(props));
 		params.setNewClassFullName(props
 				.getProperty("loadNewClass.newClassFullName"));
 		params.setNewClassExecuteMethodArgs(props
 				.getProperty("loadNewClass.executeMethodArgs"));
+		
+		//transformClass
+		params.setTransformer(props.getProperty("transformClass.transformer"));
+		
 		return params;
 	}
 

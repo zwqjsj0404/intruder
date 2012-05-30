@@ -1,4 +1,11 @@
 #!/bin/sh
+
+## Description:
+## Usage: 	sh intruder.sh <pid>
+## Author: 	zili.dengzl long.caol
+## Date: 	2012.05.30
+##
+
 echo "Usage: intruder.sh <confPath> <pid>"
 echo
 INTRUDER_HOME=`dirname "$0"`/..

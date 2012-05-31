@@ -9,3 +9,5 @@ intruder is a intrument tool like btrace.
 4). open another consloe, cd ${yourDownloadDir}/intruder
 5). jps, find pid of "InstrumentTest"
 6). sh bin/intruder.sh <pid> 
+
+dev now

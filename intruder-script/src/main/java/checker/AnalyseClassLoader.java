@@ -8,11 +8,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+/**
+ * @author dragon.caol 2012-6-1 ÉÏÎç11:23:10
+ */
 public class AnalyseClassLoader {
 
 	/**
@@ -26,20 +28,24 @@ public class AnalyseClassLoader {
 		Map<String, String> jbossMap = an
 				.loadAnalyse("D:\\temp\\com\\start1.log");
 		Set<Map.Entry<String, String>> entrySet = jettyMap.entrySet();
-		Set<String> jar = new HashSet<String>();
 		Map<String, ArrayList<String>> data = new HashMap<String, ArrayList<String>>();
 		for (Map.Entry<String, String> entry : entrySet) {
 			String key = entry.getKey();
-			String value = entry.getValue();
-			if (jbossMap.containsKey(key) && !value.equals(jbossMap.get(key))) {
-				jar.add(value);
-				String log = key + "," + value + "," + jbossMap.get(key);
-				if (data.containsKey(value)) {
-					data.get(value).add(log);
+			String jettyvalue = entry.getValue();
+			String jbossValue = jbossMap.get(key);
+			if (jbossMap.containsKey(key) && !jettyvalue.equals(jbossValue)) {
+				String jettyjboss = "jetty:" + jettyvalue + "-----jboss:"
+						+ jbossValue;
+				String split[] = jbossValue.split("/");
+				String splitjetty[] = jettyvalue.split("/");
+				String log = key + "," + splitjetty[splitjetty.length - 1]
+						+ "," + split[split.length - 1];
+				if (data.containsKey(jettyjboss)) {
+					data.get(jettyjboss).add(log);
 				} else {
 					ArrayList<String> d = new ArrayList<String>();
 					d.add(log);
-					data.put(value, d);
+					data.put(jettyjboss, d);
 				}
 			}
 		}
